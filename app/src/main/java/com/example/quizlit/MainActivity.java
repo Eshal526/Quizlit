@@ -1,4 +1,4 @@
-package com.example.quiz;
+package com.example.quizlit;
 
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBarDrawerToggle;
