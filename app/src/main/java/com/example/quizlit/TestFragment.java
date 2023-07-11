@@ -95,10 +95,12 @@ public class TestFragment extends Fragment {
                 @Override
                 public void run() {
                     letterTextView.setText(getRandomLetter());
-                    answerTextView.setText("");
+                    answerString = ""; // Reset the answerString
+                    answerTextView.setText(""); // Clear the answerTextView
                 }
             }, 2000); // 2000 milliseconds = 2 seconds
         }
+
     }
 
     private void saveResultsToDatabase() {
