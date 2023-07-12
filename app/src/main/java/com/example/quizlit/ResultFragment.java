@@ -1,6 +1,7 @@
 package com.example.quizlit;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +31,23 @@ public class ResultFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         resultTextView = view.findViewById(R.id.result_text_view);
-        displayResults();
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            int questionCounter = arguments.getInt("questionCounter");
+            SQLiteDatabase database = databaseHelper.getReadableDatabase();
+            displayResults(database);
+        }
+
         return view;
     }
+    private SQLiteDatabase database;
 
-    private void displayResults() {
-        Cursor cursor = databaseHelper.getResult();
+    public void setDatabase(SQLiteDatabase database) {
+        this.database =database;
+    }
+    private void displayResults(SQLiteDatabase database) {
+        Cursor cursor = databaseHelper.getResult(database,1);
 
         StringBuilder resultBuilder = new StringBuilder();
         while (cursor.moveToNext()) {

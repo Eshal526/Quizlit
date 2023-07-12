@@ -1,6 +1,10 @@
 package com.example.quizlit;
+import static com.example.quizlit.MyDatabaseHelper.COLUMN_RESULT;
+
+import com.example.quizlit.MyDatabaseHelper;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -25,6 +29,7 @@ public class TestFragment extends Fragment {
     private String answerString = "";
     private int questionCounter = 0;
     private SQLiteDatabase database;
+
 
     public TestFragment() {
         // Required empty public constructor
@@ -81,7 +86,7 @@ public class TestFragment extends Fragment {
         if (answerString.equals(expectedAnswer)) {
             answerTextView.setText("Awesome! Your answer is right");
         } else {
-            answerTextView.setText("Incorrect! The answer is " + answerString);
+            answerTextView.setText("Incorrect! The answer is " + expectedAnswer);
         }
 
         questionCounter++;
@@ -108,7 +113,8 @@ public class TestFragment extends Fragment {
     private void saveResultsToDatabase(int questionCounter) {
         for (int i = 1; i <= questionCounter; i++) {
             String result = getResultForQuestion(i);
-            MyDatabaseHelper.insertResult(database, i, result);
+            boolean isCorrect = result.equals("Correct");
+            MyDatabaseHelper.insertResult(database, i, String.valueOf(isCorrect));
         }
     }
 
@@ -117,6 +123,8 @@ public class TestFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("questionCounter", questionCounter);
         resultFragment.setArguments(bundle);
+        // Pass the database instance to the ResultFragment
+        resultFragment.setDatabase(database);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, resultFragment)
                 .commit();
@@ -143,12 +151,15 @@ public class TestFragment extends Fragment {
     }
 
     private String getResultForQuestion(int questionNumber) {
-        String result;
-        if (questionNumber <= questionCounter) {
-            result = "Correct"; // Or retrieve the actual result from your logic
-        } else {
-            result = "Not answered";
+        MyDatabaseHelper dbHelper = new MyDatabaseHelper(getActivity());
+        SQLiteDatabase database = dbHelper.getReadableDatabase();
+        Cursor cursor = dbHelper.getResult(database, questionNumber);
+        String result = "Not answered";
+        if (((Cursor) cursor).moveToFirst()) {
+            int resultColumnIndex = cursor.getColumnIndexOrThrow(COLUMN_RESULT);
+            result = cursor.getString(resultColumnIndex);
         }
+        cursor.close();
         return result;
     }
 }

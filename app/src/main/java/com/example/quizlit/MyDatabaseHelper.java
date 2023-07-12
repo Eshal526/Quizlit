@@ -29,7 +29,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Implement if you need to upgrade the database
+
     }
 
     public static void insertResult(SQLiteDatabase db, int questionNumber, String result) {
@@ -39,18 +39,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_RESULTS, null, values);
     }
 
-    public Cursor getResult() {
-        SQLiteDatabase db = getReadableDatabase();
+    public Cursor getResult(SQLiteDatabase database, int questionNumber) {
         String[] projection = {
                 COLUMN_QUESTION_NUMBER,
                 COLUMN_RESULT
         };
+        String selection = COLUMN_QUESTION_NUMBER + " = ?";
+        String[] selectionArgs = {String.valueOf(questionNumber)};
         String sortOrder = COLUMN_QUESTION_NUMBER + " ASC";
-        return db.query(
+        return database.query(
                 TABLE_RESULTS,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null,
                 null,
                 sortOrder
