@@ -87,7 +87,7 @@ public class TestFragment extends Fragment {
         questionCounter++;
 
         if (questionCounter == 5) {
-            saveResultsToDatabase();
+            saveResultsToDatabase(questionCounter); // Pass the questionCounter as a parameter
             navigateToResultFragment();
         } else {
             // Wait for 2 seconds and create a new question
@@ -95,33 +95,32 @@ public class TestFragment extends Fragment {
                 @Override
                 public void run() {
                     letterTextView.setText(getRandomLetter());
-                    answerString = ""; // Reset the answerString
-                    answerTextView.setText(""); // Clear the answerTextView
+                    answerTextView.setText("");
                 }
             }, 2000); // 2000 milliseconds = 2 seconds
         }
 
+
     }
 
-    private void saveResultsToDatabase() {
-        MyDatabaseHelper dbHelper = new MyDatabaseHelper(getActivity());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+
+    private void saveResultsToDatabase(int questionCounter) {
         for (int i = 1; i <= questionCounter; i++) {
             String result = getResultForQuestion(i);
-            MyDatabaseHelper.insertResult(db, i, result);
+            MyDatabaseHelper.insertResult(database, i, result);
         }
-
-        db.close();
     }
 
     private void navigateToResultFragment() {
         ResultFragment resultFragment = new ResultFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("questionCounter", questionCounter);
+        resultFragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, resultFragment)
                 .commit();
     }
-
     private String getRandomLetter() {
         Random random = new Random();
         int category = random.nextInt(3);
