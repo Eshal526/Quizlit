@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TestFragment extends Fragment {
@@ -29,6 +31,8 @@ public class TestFragment extends Fragment {
     private String answerString = "";
     private int questionCounter = 0;
     private SQLiteDatabase database;
+
+    private List<QuizResult> quizResults = new ArrayList<>();
 
 
     public TestFragment() {
@@ -83,6 +87,9 @@ public class TestFragment extends Fragment {
     }
 
     private void checkAnswer(String expectedAnswer) {
+
+        quizResults.add(new QuizResult(questionCounter, expectedAnswer, answerString.equals(expectedAnswer)));
+
         if (answerString.equals(expectedAnswer)) {
             answerTextView.setText("Awesome! Your answer is right");
         } else {

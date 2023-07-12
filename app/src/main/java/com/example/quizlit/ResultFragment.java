@@ -12,9 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.List;
+
 public class ResultFragment extends Fragment {
     private MyDatabaseHelper databaseHelper;
     private TextView resultTextView;
+
+    private List<QuizResult> quizResults;
 
     public ResultFragment() {
         // Required empty public constructor
@@ -59,4 +63,14 @@ public class ResultFragment extends Fragment {
         resultTextView.setText(resultBuilder.toString());
         cursor.close();
     }
+    public void setQuizResults(List<QuizResult> quizResults) {
+        this.quizResults = quizResults;
+    }
+
+    private void saveResultsToDatabase() {
+        for (QuizResult quizResult : quizResults) {
+            MyDatabaseHelper.insertResult(database, quizResult.getQuestionNumber(), quizResult.getUserAnswer(), quizResult.isCorrect());
+        }
+    }
+
 }
