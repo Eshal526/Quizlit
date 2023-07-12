@@ -32,6 +32,8 @@ public class TestFragment extends Fragment {
     private int questionCounter = 0;
     private SQLiteDatabase database;
 
+    private String selectedAnswer;
+
     private List<QuizResult> quizResults = new ArrayList<>();
 
 
@@ -65,6 +67,7 @@ public class TestFragment extends Fragment {
         skyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedAnswer = "Sky Letter";
                 checkAnswer("Sky Letter");
             }
         });
@@ -73,6 +76,7 @@ public class TestFragment extends Fragment {
         grassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedAnswer = "Grass Letter";
                 checkAnswer("Grass Letter");
             }
         });
@@ -81,14 +85,17 @@ public class TestFragment extends Fragment {
         rootButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedAnswer = "Root Letter";
                 checkAnswer("Root Letter");
             }
         });
+
     }
 
     private void checkAnswer(String expectedAnswer) {
+        String userAnswer = ...; // Retrieve the user's answer
+        quizResults.add(new QuizResult(questionCounter, userAnswer, expectedAnswer.equals(userAnswer)));
 
-        quizResults.add(new QuizResult(questionCounter, expectedAnswer, answerString.equals(expectedAnswer)));
 
         if (answerString.equals(expectedAnswer)) {
             answerTextView.setText("Awesome! Your answer is right");
@@ -118,12 +125,12 @@ public class TestFragment extends Fragment {
 
 
     private void saveResultsToDatabase(int questionCounter) {
-        for (int i = 1; i <= questionCounter; i++) {
-            String result = getResultForQuestion(i);
-            boolean isCorrect = result.equals("Correct");
-            MyDatabaseHelper.insertResult(database, i, String.valueOf(isCorrect));
+        for (QuizResult quizResult : quizResults) {
+            MyDatabaseHelper.insertResult(database, quizResult.getQuestionNumber(), quizResult.getUserAnswer(), quizResult.isCorrect());
         }
     }
+
+
 
     private void navigateToResultFragment() {
         ResultFragment resultFragment = new ResultFragment();

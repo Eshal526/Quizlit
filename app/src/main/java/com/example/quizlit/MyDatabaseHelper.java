@@ -13,8 +13,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_QUESTION_NUMBER = "question_number";
     public static final String COLUMN_RESULT = "result";
-    private static final String COLUMN_USER_ANSWER = ;
-    private static final String COLUMN_IS_CORRECT = ;
+    private static final String COLUMN_USER_ANSWER = "Username";
+    private static final String COLUMN_IS_CORRECT = "Answer";
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
