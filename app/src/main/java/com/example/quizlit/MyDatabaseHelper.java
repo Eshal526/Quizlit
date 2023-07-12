@@ -13,6 +13,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_QUESTION_NUMBER = "question_number";
     public static final String COLUMN_RESULT = "result";
+    private static final String COLUMN_USER_ANSWER = ;
+    private static final String COLUMN_IS_CORRECT = ;
 
     public MyDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,12 +34,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public static void insertResult(SQLiteDatabase db, int questionNumber, String result) {
+    public static void insertResult(SQLiteDatabase db, int questionNumber, String userAnswer, boolean isCorrect) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_QUESTION_NUMBER, questionNumber);
-        values.put(COLUMN_RESULT, result);
+        values.put(COLUMN_USER_ANSWER, userAnswer);
+        values.put(COLUMN_IS_CORRECT, isCorrect);
         db.insert(TABLE_RESULTS, null, values);
     }
+
 
     public Cursor getResult(SQLiteDatabase database, int questionNumber) {
         String[] projection = {

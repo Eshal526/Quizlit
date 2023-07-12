@@ -1,6 +1,7 @@
 package com.example.quizlit;
 
- public class QuizResult {
+ public class QuizResult
+ {
         private int questionNumber;
         private String userAnswer;
         private boolean isCorrect;
@@ -22,6 +23,6 @@ package com.example.quizlit;
         public boolean isCorrect() {
             return isCorrect;
         }
-    }
+ }
 
-}
+
